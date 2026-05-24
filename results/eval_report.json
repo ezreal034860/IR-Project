@@ -1,0 +1,39 @@
+{
+  "retrieval": {
+    "bm25": {
+      "precision@5": 0.76,
+      "recall@5": 0.2304517437626128,
+      "mrr": 0.9083333333333332,
+      "ndcg@5": 0.7883335393218298,
+      "hit@5": 1.0,
+      "mode": "bm25",
+      "num_queries": 20
+    },
+    "dense": {
+      "precision@5": 0.7300000000000002,
+      "recall@5": 0.22861530473867372,
+      "mrr": 0.8404761904761905,
+      "ndcg@5": 0.7444521864295913,
+      "hit@5": 0.95,
+      "mode": "dense",
+      "num_queries": 20
+    },
+    "hybrid": {
+      "precision@5": 0.75,
+      "recall@5": 0.22905560517897422,
+      "mrr": 0.9083333333333334,
+      "ndcg@5": 0.776147898852067,
+      "hit@5": 1.0,
+      "mode": "hybrid",
+      "num_queries": 20
+    }
+  },
+  "generation": {
+    "char_f1": 0.10003072465022791,
+    "keyword_coverage": 0.875,
+    "mode": "hybrid",
+    "num_queries": 20
+  },
+  "eval_set_size": 20,
+  "top_k": 5
+}
