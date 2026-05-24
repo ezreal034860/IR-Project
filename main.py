@@ -82,7 +82,7 @@ def cmd_demo(args: argparse.Namespace) -> None:
 
 
 def main() -> None:
-  parser = argparse.ArgumentParser(description="马克思主义基本原理 RAG 系统")
+  parser = argparse.ArgumentParser(description="马克思主义基本原理RAG系统")
   parser.add_argument("--index-dir", type=Path, default=DEFAULT_INDEX)
   parser.add_argument("--raw-text", type=Path, default=DEFAULT_RAW)
   parser.add_argument("--eval-path", type=Path, default=DEFAULT_EVAL)

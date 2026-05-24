@@ -6,6 +6,7 @@ import os
 from dataclasses import dataclass
 from typing import List, Optional
 
+from .config import load_config
 from .retriever import RetrievedChunk
 
 
@@ -49,19 +50,17 @@ def _extractive_answer(question: str, chunks: List[RetrievedChunk], max_chars: i
 
 
 def _llm_answer(question: str, chunks: List[RetrievedChunk]) -> Optional[GeneratedAnswer]:
-  api_key = os.getenv("OPENAI_API_KEY")
-  if not api_key:
-    return None
   try:
     from langchain_openai import ChatOpenAI
     from langchain_core.messages import HumanMessage, SystemMessage
   except ImportError:
     return None
+  cfg = load_config()
 
   context = "\n\n".join(
     f"[{i + 1}] ({c.chapter}/{c.section})\n{c.text}" for i, c in enumerate(chunks)
   )
-  llm = ChatOpenAI(model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"), temperature=0.2)
+  llm = ChatOpenAI(api_key=cfg.api_key, model=cfg.llm_model, temperature=0.2)
   messages = [
     SystemMessage(
       content=(

@@ -3,3 +3,4 @@ scikit-learn>=1.2
 faiss-cpu>=1.7.4
 pywin32>=306; sys_platform == "win32"
 langchain-openai>=0.1.0; extra == "llm"
+openai>=1.0.0

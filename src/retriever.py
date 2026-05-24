@@ -1,4 +1,4 @@
-"""Hybrid retrieval: BM25 + dense TF-IDF with reciprocal rank fusion."""
+"""Hybrid retrieval: BM25 + dense embedding with reciprocal rank fusion."""
 
 from __future__ import annotations
 
@@ -7,9 +7,10 @@ from typing import Dict, List, Literal, Sequence, Tuple
 
 import faiss
 import numpy as np
+from openai import OpenAI
 
+from .config import load_config
 from .indexer import IndexBundle
-from .tokenizer import join_tokens, tokenize
 
 RetrievalMode = Literal["bm25", "dense", "hybrid"]
 
@@ -29,10 +30,14 @@ class HybridRetriever:
   def __init__(self, bundle: IndexBundle, rrf_k: int = 60) -> None:
     self.bundle = bundle
     self.rrf_k = rrf_k
+    self.client = OpenAI(api_key=load_config().api_key)
 
   def _dense_scores(self, query: str, top_k: int) -> List[Tuple[int, float]]:
-    q = join_tokens(tokenize(query))
-    q_vec = self.bundle.vectorizer.transform([q]).astype(np.float32).toarray()
+    resp = self.client.embeddings.create(
+      model=self.bundle.embedding_model,
+      input=query,
+    )
+    q_vec = np.asarray([resp.data[0].embedding], dtype=np.float32)
     faiss.normalize_L2(q_vec)
     scores, indices = self.bundle.faiss_index.search(q_vec, top_k)
     return [(int(i), float(s)) for i, s in zip(indices[0], scores[0]) if i >= 0]

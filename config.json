@@ -1,0 +1,5 @@
+{
+  "api_key": "PASTE_YOUR_OPENAI_API_KEY_HERE",
+  "embedding_model": "text-embedding-3-small",
+  "llm_model": "gpt-4o-mini"
+}
