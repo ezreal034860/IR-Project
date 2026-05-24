@@ -1,7 +1,7 @@
 
 # Hybrid RAG for Chinese Textbook QA
 
-一个基于中文教材的 Hybrid RAG（Retrieval-Augmented Generation）问答系统，支持：
+一个基于马原教材的 Hybrid RAG（Retrieval-Augmented Generation）问答系统，支持：
 
 - BM25 稀疏检索
 - TF-IDF + FAISS 稠密检索
@@ -9,14 +9,6 @@
 - 抽取式回答生成
 - 可选 LLM 增强生成
 - 自动化检索评估
-
-适用于：
-
-- 中文教材问答
-- 本地知识库
-- RAG 系统学习
-- IR（信息检索）实验
-- NLP 课程项目
 
 ---
 
