@@ -1,6 +1,6 @@
 {
-  "api_key": "sk-yhoeayhczpskpkyrexfpjtpqawagwppllyrmvlxtbpjfeudm",
-  "base_url": "https://api.siliconflow.cn/v1/",
+  "api_key": "",
+  "base_url": "",
   "embedding_model": "Qwen/Qwen3-Embedding-4B",
   "llm_model": "gpt-4o-mini"
 }
