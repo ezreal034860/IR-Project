@@ -1,6 +1,4 @@
-# IR-Project
 
-````markdown
 # Hybrid RAG for Chinese Textbook QA
 
 一个基于中文教材的 Hybrid RAG（Retrieval-Augmented Generation）问答系统，支持：
