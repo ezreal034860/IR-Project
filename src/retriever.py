@@ -30,7 +30,8 @@ class HybridRetriever:
   def __init__(self, bundle: IndexBundle, rrf_k: int = 60) -> None:
     self.bundle = bundle
     self.rrf_k = rrf_k
-    self.client = OpenAI(api_key=load_config().api_key)
+    cfg = load_config()
+    self.client = OpenAI(api_key=cfg.api_key, base_url=cfg.base_url)
 
   def _dense_scores(self, query: str, top_k: int) -> List[Tuple[int, float]]:
     resp = self.client.embeddings.create(

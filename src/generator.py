@@ -60,7 +60,12 @@ def _llm_answer(question: str, chunks: List[RetrievedChunk]) -> Optional[Generat
   context = "\n\n".join(
     f"[{i + 1}] ({c.chapter}/{c.section})\n{c.text}" for i, c in enumerate(chunks)
   )
-  llm = ChatOpenAI(api_key=cfg.api_key, model=cfg.llm_model, temperature=0.2)
+  llm = ChatOpenAI(
+    api_key=cfg.api_key,
+    base_url=cfg.base_url,
+    model=cfg.llm_model,
+    temperature=0.2,
+  )
   messages = [
     SystemMessage(
       content=(

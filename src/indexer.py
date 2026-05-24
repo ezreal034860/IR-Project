@@ -39,7 +39,7 @@ def _analyzer(text: str) -> List[str]:
 
 def _embed_texts(texts: Sequence[str], model: str) -> np.ndarray:
   cfg = load_config()
-  client = OpenAI(api_key=cfg.api_key)
+  client = OpenAI(api_key=cfg.api_key, base_url=cfg.base_url)
   vectors: List[List[float]] = []
   batch_size = 64
   for start in range(0, len(texts), batch_size):
@@ -56,7 +56,6 @@ def _embed_texts(texts: Sequence[str], model: str) -> np.ndarray:
 def build_index(chunks: List[Chunk]) -> IndexBundle:
   cfg = load_config()
   texts = [c.text for c in chunks]
-  tokenized = _tokenized_corpus(chunks)
 
   bm25 = BM25Index().fit(texts)
 
@@ -66,13 +65,15 @@ def build_index(chunks: List[Chunk]) -> IndexBundle:
     max_df=0.95,
     sublinear_tf=True,
   )
-  matrix = vectorizer.fit_transform(tokenized).astype(np.float32)
-  dense = matrix.toarray()
-  faiss.normalize_L2(dense)
-  index = faiss.IndexFlatIP(dense.shape[1])
-  index.add(dense)
+  tokenized = _tokenized_corpus(chunks)
+  vectorizer.fit_transform(tokenized)
 
   embedding_dense = _embed_texts(texts, cfg.embedding_model)
+  if embedding_dense.size == 0:
+    index = faiss.IndexFlatIP(1)
+  else:
+    index = faiss.IndexFlatIP(embedding_dense.shape[1])
+    index.add(embedding_dense)
   return IndexBundle(
     chunks=chunks,
     bm25=bm25,
@@ -116,11 +117,26 @@ def load_index(index_dir: Path) -> IndexBundle:
   if meta_path.exists():
     meta = json.loads(meta_path.read_text(encoding="utf-8"))
     embedding_model = meta.get("embedding_model", embedding_model)
+
+  if dense.size == 0:
+    embedding_index = faiss.IndexFlatIP(1)
+  elif faiss_index.d != dense.shape[1]:
+    rebuilt = _embed_texts([c.text for c in chunks], embedding_model)
+    if rebuilt.size == 0:
+      embedding_index = faiss.IndexFlatIP(1)
+      dense = rebuilt
+    else:
+      embedding_index = faiss.IndexFlatIP(rebuilt.shape[1])
+      embedding_index.add(rebuilt)
+      dense = rebuilt
+  else:
+    embedding_index = faiss_index
+
   return IndexBundle(
     chunks=chunks,
     bm25=bm25,
     vectorizer=vectorizer,
-    faiss_index=faiss_index,
+    faiss_index=embedding_index,
     dense_matrix=dense,
     embedding_model=embedding_model,
   )
