@@ -88,13 +88,7 @@ python main.py demo
 - dense 检索使用 `config.json` 中的 `embedding_model`。
 - 如果你更换了 embedding 模型，建议重新执行 `python main.py build` 生成新索引。
 
-## 常见问题
 
-### 1. 查询时报维度错误
-通常是旧索引和当前 embedding 模型不一致。删除 `indices/` 后重新 `build` 即可。
-
-### 2. LLM 不返回结果
-检查 `config.json` 中的 `llm_model` 和 `base_url` 是否可用，且中转站支持该模型。
 
 ### 3. embedding 调用失败
 检查 `api_key`、`base_url`、`embedding_model` 是否填写正确。
